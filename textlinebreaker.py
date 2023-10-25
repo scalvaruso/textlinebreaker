@@ -3,7 +3,9 @@ import os
 def main():
 
     text = [("hello",36,47),
+            "",
             "this is an example of textlinebreaker",
+            "",
             "next line is 6 characters:", "123456",
             "next line is 12 characters:", "123456789012",
             "next line is 25 characters:", "1234567890123456789012345",
@@ -14,12 +16,16 @@ def main():
             "123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
             "next line is 200 characters:",
             "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890",
-            "one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty"]
+            "",
+            "one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen sixteen seventeen eighteen nineteen twenty",
+            ""
+            ]
 
     terminal_width = os.get_terminal_size().columns
-    max_width = int(2* terminal_width / 3)
-    max_width = terminal_width - 20
-    max_width = 70
+    #max_width = int(2* terminal_width / 3)
+    #max_width = terminal_width - 20
+    max_width = terminal_width
+    max_width = 50
 
     menu_list = []
     
@@ -37,6 +43,7 @@ def main():
             item[2] is the backgroud colour of the text.
             """
             words = item[0].split(" ")
+            
             if item[1] != "":
                 #text_colour = _valid_colour(item[1])
                 text_colour = item[1]
@@ -66,17 +73,16 @@ def main():
 
 
 def split_line(line, max_width):
+
     new_list = []
-    
-    """
-    for item in menu_list:
-        
-        space = " "
-    """
-    
-    # Split the lines if they are longer than the max length characters.
     new_line = ""
     space = " "
+    alignment = "{:<50}"
+    
+    # Split the lines if they are longer than the max length characters.
+    
+    if line == [""]:
+        new_list.append("")
 
     for word in line:
         word = word.replace("\t", "    ")
@@ -86,19 +92,29 @@ def split_line(line, max_width):
 
         else:
             if len(word) >= max_width:
-                if len(new_line) != 0:
-                    new_list.append(new_line.rstrip(" "))
+
+                remaining_width = max_width - len(new_line)
+                new_line += word[:remaining_width] + space
+                word = word[remaining_width:]
+                #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
+                new_list.append(alignment.format(new_line.rstrip(" ")))
+
                 while len(word) >= max_width:
                     new_line = word[:max_width] + space
                     word = word[max_width:]
-                    new_list.append(new_line.rstrip(" "))
+                    #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
+                    new_list.append(alignment.format(new_line.rstrip(" ")))
                 new_line = word + space
-                #new_list.append(new_line.rstrip(" "))
-            
-    new_list.append(new_line.rstrip(" "))
-        
-    #new_list.append(new_line.rstrip(" "))
+
+            else:
+                #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
+                new_list.append(alignment.format(new_line.rstrip(" ")))
+                new_line = word + space
     
+    if new_line != " ":
+        #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
+        new_list.append(alignment.format(new_line.rstrip(" ")))
+        
     return new_list
 
 
