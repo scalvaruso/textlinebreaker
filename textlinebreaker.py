@@ -25,7 +25,7 @@ def main():
     #max_width = int(2* terminal_width / 3)
     #max_width = terminal_width - 20
     max_width = terminal_width
-    max_width = 50
+    max_width = 100
 
     menu_list = []
     
@@ -72,17 +72,24 @@ def main():
     print(f"Terminal width={terminal_width}\nLine max lenght={max_width}")
 
 
-def split_line(line, max_width):
+def split_line(line, max_width, alignment="left"):
 
     new_list = []
     new_line = ""
     space = " "
-    alignment = "{:<50}"
+    #adjustment = "{:^50}"
+    if alignment.lower() == "right":
+        positioning = "{:>"
+    elif alignment.lower()=="centre" or alignment.lower()=="center":
+        positioning = "{:^"
+    else:
+        positioning = "{:<"
+    adjustment = positioning + f"{max_width}" + "}"
     
     # Split the lines if they are longer than the max length characters.
     
     if line == [""]:
-        new_list.append("")
+        new_list.append(" "*max_width)
 
     for word in line:
         word = word.replace("\t", "    ")
@@ -96,24 +103,24 @@ def split_line(line, max_width):
                 remaining_width = max_width - len(new_line)
                 new_line += word[:remaining_width] + space
                 word = word[remaining_width:]
-                #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
-                new_list.append(alignment.format(new_line.rstrip(" ")))
+                #new_line = adjustment.format(new_line.rstrip(" "))    #Test alignement
+                new_list.append(adjustment.format(new_line.rstrip(" ")))
 
                 while len(word) >= max_width:
                     new_line = word[:max_width] + space
                     word = word[max_width:]
-                    #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
-                    new_list.append(alignment.format(new_line.rstrip(" ")))
+                    #new_line = adjustment.format(new_line.rstrip(" "))    #Test alignement
+                    new_list.append(adjustment.format(new_line.rstrip(" ")))
                 new_line = word + space
 
             else:
-                #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
-                new_list.append(alignment.format(new_line.rstrip(" ")))
+                #new_line = adjustment.format(new_line.rstrip(" "))    #Test alignement
+                new_list.append(adjustment.format(new_line.rstrip(" ")))
                 new_line = word + space
     
     if new_line != " ":
-        #new_line = alignment.format(new_line.rstrip(" "))    #Test alignement
-        new_list.append(alignment.format(new_line.rstrip(" ")))
+        #new_line = adjustment.format(new_line.rstrip(" "))    #Test alignement
+        new_list.append(adjustment.format(new_line.rstrip(" ")))
         
     return new_list
 
