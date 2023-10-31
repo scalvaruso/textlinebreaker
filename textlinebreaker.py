@@ -61,7 +61,7 @@ def main():
             text_colour = t_colour
             text_background = t_background
 
-        for line in split_line(words, max_width):
+        for line in split_line(words, max_width, alignment="centre"):
             menu_list.append((line,text_colour,text_background))
             
     #to_print = split_line(text, max_length)

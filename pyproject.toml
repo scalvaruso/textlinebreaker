@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "textlinebreaker"
+version = "0.1.0"
+description = "A module to format strings. Length and alignment of lines can be specified."
+authors = ["scalvaruso <calvaruso.simone@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
