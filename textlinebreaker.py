@@ -61,7 +61,7 @@ def main():
             text_colour = t_colour
             text_background = t_background
 
-        for line in split_line(words, max_width, alignment="centre"):
+        for line in split_line(words, alignment="centre"):
             menu_list.append((line,text_colour,text_background))
             
     #to_print = split_line(text, max_length)
@@ -72,7 +72,25 @@ def main():
     print(f"Terminal width={terminal_width}\nLine max lenght={max_width}")
 
 
-def split_line(line, max_width, alignment="left"):
+def split_line(line, max_width=os.get_terminal_size().columns, alignment="left"):
+    """
+    Text Line Breaker is a Python script that takes a list of text items,
+    breaks them into lines of a specified maximum width.
+    This can be particularly useful for formatting and displaying text in a terminal.
+
+    Parameters:
+        line: is the main argument, it's the text that needs to be broken down
+        max_width: allows to set the max length of text on a line.
+            default value = terminal width
+            allowed values: integers
+        alignment: allows to change the alignment of the text inside the frame.
+            default value = "left"
+            allowed values: "left", "centre", "center", "right"
+    """
+    if max_width > os.get_terminal_size().columns:
+        max_width = os.get_terminal_size().columns
+    elif max_width < 1:
+        max_width = 1
 
     new_list = []
     new_line = ""
