@@ -56,15 +56,15 @@ This script relies on the Python standard library and does not require any addit
 ## Usage
 
 This function takes a long string of text as input and breaks it into lines according to the specified maximum width.
-The default length is the width of the terminal
+The default length is the width of the terminal.
 
 ### Parameters
 
 The `split_line` function accepts the following parameters:
 
-- `line`: is the main argument, it's the text that needs to be broken down
+- `line`: is the main argument, it's the text that needs to be broken down.
 - `max_width`: Allows you to set the maximum length of text on a line. Default value is the terminal width. Allowed values are integers.
-- `alignment`: Allows you to change the alignment of the text inside the frame. Default value is "left." Allowed values are "left," "centre," "center," or "right."
+- `alignment`: Allows you to change the alignment of the text inside the frame. Default value is "left". Allowed values are "left", "centre" or "center", and "right".
 
 ### Examples
 

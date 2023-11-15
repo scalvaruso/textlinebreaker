@@ -1,15 +1,21 @@
-[tool.poetry]
+[project]
 name = "textlinebreaker"
-version = "0.1.0"
+version = "0.0.1"
+dependencies = [ ]
+requires-python = ">=3.9"
+authors = [
+    { name="scalvaruso", email="calvaruso.simone@gmail.com" },
+]
 description = "A module to format strings. Length and alignment of lines can be specified."
-authors = ["scalvaruso <calvaruso.simone@gmail.com>"]
-license = "MIT"
 readme = "README.md"
+license = {text = "MIT License"}
+keywords = ["alignment", "break", "center", "centre", "format", "left", "line", "right", "split", "text"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
 
-[tool.poetry.dependencies]
-python = "^3.10"
-
-
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[project.urls]
+Homepage = "https://github.com/scalvaruso/textlinebreaker"
+Repository = "https://github.com/scalvaruso/textlinebreaker"
