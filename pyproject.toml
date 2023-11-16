@@ -12,6 +12,9 @@ license = {text = "MIT License"}
 keywords = ["alignment", "break", "center", "centre", "format", "left", "line", "right", "split", "text"]
 classifiers = [
     "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
@@ -19,3 +22,7 @@ classifiers = [
 [project.urls]
 Homepage = "https://github.com/scalvaruso/textlinebreaker"
 Repository = "https://github.com/scalvaruso/textlinebreaker"
+
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"

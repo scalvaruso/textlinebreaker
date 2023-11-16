@@ -1,8 +1,7 @@
 # Textlinebreaker
 
 [<img src="https://img.shields.io/badge/textlinebreaker-py-blue?style=flat&logo=python&logoWidth=20.svg/"></a>](https://github.com/scalvaruso/textlinebreaker/)
-[![PyPI - Version](https://img.shields.io/pypi/v/textlinebreaker?logo=pypi&logoColor=white&color=blue)
-](https://pypi.org/project/textlinebreaker/)
+[![PyPI - Version](https://img.shields.io/pypi/v/textlinebreaker?logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/textlinebreaker/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/textlinebreaker?logo=python)](https://pypi.org/project/textlinebreaker/)
 [![Downloads](https://static.pepy.tech/badge/textlinebreaker)](https://pepy.tech/project/textlinebreaker)
 [![PyPI - License](https://img.shields.io/pypi/l/textlinebreaker?color=blue)](https://github.com/scalvaruso/textlinebreaker/blob/main/LICENSE.md)
@@ -101,4 +100,4 @@ If you'd like to contribute to this project, please follow these steps:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/scalvaruso/textlinebreaker/blob/main/LICENSE.md) file for details.
