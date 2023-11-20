@@ -1,6 +1,6 @@
 [project]
 name = "textlinebreaker"
-version = "0.1.0-alpha"
+version = "0.1.0"
 dependencies = [ ]
 requires-python = ">=3.9"
 authors = [
