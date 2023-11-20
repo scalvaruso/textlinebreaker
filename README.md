@@ -21,6 +21,11 @@ Text Line Breaker is a Python script that takes a string of text and breaks it i
 - Choose alignment options for the text (left, center, right).
 - Adjust the maximum width (default value is the terminal width).
 
+## Latest Version 0.1.0-alpha
+
+- Fixed a bug where the string was split in single characters rather than in words.
+- Added a check for the input to establish if it is a list or a string in order to perform the correct splitting method.
+
 ## Table of Contents
 
 - [Getting Started](#getting-started)
