@@ -20,7 +20,7 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/scalvaruso/textlinebreaker"
+Homepage = "https://pypi.org/project/textlinebreaker"
 Repository = "https://github.com/scalvaruso/textlinebreaker"
 
 [build-system]
