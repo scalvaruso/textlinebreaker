@@ -1,6 +1,6 @@
 [project]
 name = "textlinebreaker"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [ ]
 requires-python = ">=3.9"
 authors = [
@@ -9,7 +9,7 @@ authors = [
 description = "A module to format strings. Length and alignment of lines can be specified. In the new version is resolved the issue that caused the string to be splitted in single characters rather than in words. Also a check has been added to establish if the input is a list or a string in order to perform the correct splitting method."
 readme = "README.md"
 license = {text = "MIT License"}
-keywords = ["alignment", "break", "center", "centre", "format", "left", "line", "right", "split", "text"]
+keywords = ["alignment", "break", "center", "centre", "format", "left", "line", "right", "split", "string", "text", "words"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",

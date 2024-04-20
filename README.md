@@ -21,10 +21,10 @@ Text Line Breaker is a Python script that takes a string of text and breaks it i
 - Choose alignment options for the text (left, center, right).
 - Adjust the maximum width (default value is the terminal width).
 
-## Latest Version 0.1.0
+## Latest Version 0.2.0
 
-- Fixed a bug where the string was split in single characters rather than in words.
-- Added a check for the input to establish if it is a list or a string in order to perform the correct splitting method.
+- Added new parameters (`"min"`, `"2words"`, `"max"`) to set different lines width.
+- Improved algorithm to better split the input in the desired lenght lines.
 
 ## Table of Contents
 
@@ -50,6 +50,10 @@ This script relies on the Python standard library and does not require any addit
 ```bash
   pip install textlinebreaker
 ```
+- or upgrade it with
+```bash
+  pip install --upgrade textlinebreaker
+```
 
 - Import the package in your program
 
@@ -66,9 +70,14 @@ The default length is the width of the terminal.
 
 The `split_line` function accepts the following parameters:
 
-- `line`: is the main argument, it's the text that needs to be broken down.
-- `max_width`: Allows you to set the maximum length of text on a line. Default value is the terminal width. Allowed values are integers.
-- `alignment`: Allows you to change the alignment of the text inside the frame. Default value is "left". Allowed values are "left", "centre" or "center", and "right".
+- **`line`**: is the main argument, it's the text that needs to be broken down.
+  - allowed values: strings, list of strings
+- **`max_width`**: allows to set the max length of text on a line. 
+  - allowed values: integers, "min", "2words", "max"
+  - default value = "max" (terminal width)
+- **`alignment`**: allows to change the alignment of the text inside the frame.
+  - allowed values: "left", "centre", "center", "right"
+  - default value = "left"
 
 ### Examples
 
