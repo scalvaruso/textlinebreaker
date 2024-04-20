@@ -96,7 +96,7 @@ def _valid_width(max_width, words):
     
     if isinstance(max_width, int):  # If max_width is an integer
 
-        if min_width <= max_width <= os.get_terminal_size().columns:  # If max_width is within valid range
+        if 9 <= max_width <= os.get_terminal_size().columns:  # If max_width is within valid range.
             pass  # Do nothing
         elif max_width < min_width:  # If max_width is less than the minimum word length
             max_width = min_width  # Set max_width to the minimum word length
