@@ -1,4 +1,3 @@
-
 """
 Text Line Breaker is a Python script that takes a list of text items,
 breaks them into lines of a specified maximum width.
@@ -15,6 +14,7 @@ Parameters:
 """
 import os  # Import the os module for accessing terminal size and other system-related functions
 
+
 def _get_terminal_columns(default=80):
     try:
         return os.get_terminal_size().columns
@@ -23,87 +23,70 @@ def _get_terminal_columns(default=80):
 
 
 class TextLineBreaker:
-    def __init__(self, text, max_width=_get_terminal_columns(), alignment="left"):
-        self.text = text
-        self.max_width = max_width
-        self.alignment = alignment
-        self.formatted_text = self.split_line()
-    
-    def split_line(self):
-        words = self._valid_input(self.text)
-        max_width = self._valid_width(self.max_width, words)
-        new_list = []
-        new_line = ""
-        space = " "
-    
-        if self.alignment.lower() == "right":
-            positioning = "{:>"
-        elif self.alignment.lower() in ["centre", "center"]:
-            positioning = "{:^"
-        else:
-            positioning = "{:<"
-        
-        adjustment = positioning + f"{max_width}" + "}"
-        
-        if words == [""]:
-            new_list.append(" " * max_width)
-        
-        for word in words:
-            word = word.replace("\t", "    ")
+    def __init__(self, text, max_width=None, alignment="left"):
+        self.raw_text = text
+        self.terminal_width = _get_terminal_columns()
+        self.alignment = self._validate_alignment(alignment)
+        self.text_blocks = self._validate_input(self.raw_text)
+        self.max_width = self._validate_width(max_width)
+        self.formatted_text = self._break_lines()
 
-            if len(new_line + word) < (max_width + 1):
-                new_line += word + space
-            else:
-                if len(word) > max_width:
-                    remaining_width = max_width - len(new_line)
-                    new_line += word[:remaining_width] + space
-                    word = word[remaining_width:]
-                    new_list.append(adjustment.format(new_line.rstrip(" ")))
+    def _validate_input(self, input_text):
+        """Ensure input is a list of strings, split into words per string."""
+        if isinstance(input_text, str):
+            input_text = [input_text]
+        return [str(item).replace("\t", "    ").split() for item in input_text]
 
-                    while len(word) > max_width:
-                        new_line = word[:max_width] + space
-                        word = word[max_width:]
-                        new_list.append(adjustment.format(new_line.rstrip(" ")))
-                    new_line = word + space
-                else:
-                    new_list.append(adjustment.format(new_line.rstrip(" ")))
-                    new_line = word + space
-        
-        if new_line != " ":
-            new_list.append(adjustment.format(new_line.rstrip(" ")))
-        
-        return new_list
+    def _validate_alignment(self, alignment):
+        alignment = alignment.lower()
+        if alignment in ("center", "centre"):
+            return "center"
+        elif alignment == "right":
+            return "right"
+        return "left"
 
-    def _valid_input(self, line):
-        words = []
-        if isinstance(line, list):
-            for i in line:
-                if isinstance(i, list):
-                    words += i
-                else:
-                    words += i.split(" ")
-        else:
-            words = line.split(" ")
-        return words
-    
-    def _valid_width(self, max_width, words):
-        min_width = max(len(word) for word in words)
+    def _validate_width(self, max_width):
+        all_words = [word for line in self.text_blocks for word in line]
+        min_word_length = max((len(word) for word in all_words), default=10)
+
         if isinstance(max_width, int):
-            if 9 <= max_width <= os.get_terminal_size().columns:
-                pass
-            elif max_width < min_width:
-                max_width = min_width
-            else:
-                max_width = os.get_terminal_size().columns
-        elif max_width.lower() == "min":
-            max_width = min_width
-        elif max_width.lower() == "2words":
-            max_width = min_width + min(len(word) for word in words)
-        else:
-            max_width = os.get_terminal_size().columns
-        return max_width
-    
+            if 9 <= max_width <= self.terminal_width:
+                return max(max_width, min_word_length)
+            return min_word_length
+        elif isinstance(max_width, str):
+            max_width = max_width.lower()
+            if max_width == "min":
+                return min_word_length
+            elif max_width == "2words":
+                shortest = min((len(w) for w in all_words), default=1)
+                return min_word_length + shortest
+        return self.terminal_width
+
+    def _get_alignment_format(self):
+        align_map = {"left": "<", "center": "^", "right": ">"}
+        return f"{{:{align_map[self.alignment]}{self.max_width}}}"
+
+    def _break_lines(self):
+        """Split each sentence into lines and align them."""
+        align_format = self._get_alignment_format()
+        all_lines = []
+
+        for word_list in self.text_blocks:
+            current_line = ""
+            for word in word_list:
+                if len(current_line + word) + (1 if current_line else 0) <= self.max_width:
+                    current_line += (word if not current_line else " " + word)
+                else:
+                    all_lines.append(align_format.format(current_line))
+                    current_line = word
+            if current_line:
+                all_lines.append(align_format.format(current_line))
+        if not all_lines:
+            all_lines.append(" " * self.max_width)
+        return all_lines
+
     def __str__(self):
         return "\n".join(self.formatted_text)
-
-
+    
+    def __iter__(self):
+        return iter(self.formatted_text)
