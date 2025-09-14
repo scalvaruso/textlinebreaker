@@ -32,7 +32,6 @@ class TextLineBreaker:
         self.formatted_text = self._break_lines()
 
     def _validate_input(self, input_text):
-        """Ensure input is a list of strings, split into words per string."""
         if isinstance(input_text, str):
             input_text = [input_text]
         return [str(item).replace("\t", "    ").split() for item in input_text]
@@ -62,19 +61,20 @@ class TextLineBreaker:
                 return min_word_length + shortest
         return self.terminal_width
 
-    def _get_alignment_format(self):
+    def _get_alignment_format(self, width=None):
         align_map = {"left": "<", "center": "^", "right": ">"}
-        return f"{{:{align_map[self.alignment]}{self.max_width}}}"
+        if width is None:
+            width = self.max_width
+        return f"{{:{align_map[self.alignment]}{width}}}"
 
-    def _break_lines(self):
-        """Split each sentence into lines and align them."""
-        align_format = self._get_alignment_format()
+    def _break_lines(self, width=None):
+        """Split sentences into aligned lines."""
         all_lines = []
-
+        align_format = self._get_alignment_format(width)
         for word_list in self.text_blocks:
             current_line = ""
             for word in word_list:
-                if len(current_line + word) + (1 if current_line else 0) <= self.max_width:
+                if len(current_line + word) + (1 if current_line else 0) <= (width or self.max_width):
                     current_line += (word if not current_line else " " + word)
                 else:
                     all_lines.append(align_format.format(current_line))
@@ -82,11 +82,21 @@ class TextLineBreaker:
             if current_line:
                 all_lines.append(align_format.format(current_line))
         if not all_lines:
-            all_lines.append(" " * self.max_width)
+            all_lines.append(" " * (width or self.max_width))
         return all_lines
+
+    def delimiter(self, char="|"):
+        """Return a new list of lines wrapped with border characters."""
+        if not char:
+            return self.formatted_text
+        inner_width = self.max_width - 2
+        bordered_lines = []
+        for line in self._break_lines(inner_width):
+            bordered_lines.append(f"{char}{line}{char}")
+        return "\n".join(bordered_lines)
 
     def __str__(self):
         return "\n".join(self.formatted_text)
-    
+
     def __iter__(self):
         return iter(self.formatted_text)
