@@ -1,15 +1,32 @@
+[build-system]
+# Minimum versions ensure modern packaging features work
+requires = ["setuptools>=64", "setuptools-scm>=8", "wheel"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "textlinebreaker"
-version = "0.3.0"
-dependencies = [ ]
-requires-python = ">=3.9"
-authors = [
-    { name="scalvaruso", email="calvaruso.simone@gmail.com" },
-]
-description = "A module to format strings. Length and alignment of lines can be specified. In the new version is resolved the issue that caused the string to be splitted in single characters rather than in words. Also a check has been added to establish if the input is a list or a string in order to perform the correct splitting method."
+
+# Version is now dynamic, setuptools_scm will infer it from Git tags
+dynamic = ["version"]
+
+description = "A module to format strings with customizable line length and alignment. Fixes splitting issue (characters vs words) and adds input type detection (list or string)."
+
 readme = "README.md"
-license = {text = "MIT License"}
-keywords = ["alignment", "break", "center", "centre", "format", "left", "line", "right", "split", "string", "text", "words"]
+license = { text = "MIT License" }
+
+authors = [
+    { name = "scalvaruso", email = "calvaruso.simone@gmail.com" },
+]
+
+requires-python = ">=3.9"
+dependencies = []
+
+keywords = [
+    "alignment", "break", "center", "centre",
+    "format", "left", "line", "right",
+    "split", "string", "text", "words"
+]
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -22,7 +39,9 @@ classifiers = [
 [project.urls]
 Homepage = "https://pypi.org/project/textlinebreaker"
 Repository = "https://github.com/scalvaruso/textlinebreaker"
+Issues = "https://github.com/scalvaruso/textlinebreaker/issues"
 
-[build-system]
-requires = ["setuptools", "wheel"]
-build-backend = "setuptools.build_meta"
+[tool.setuptools_scm]
+# How version numbers are generated
+version_scheme = "post-release"
+local_scheme = "node-and-date"
