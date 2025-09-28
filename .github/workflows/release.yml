@@ -44,7 +44,7 @@ jobs:
 
       # 6️⃣ Conditional publish: TestPyPI for pre-releases
       - name: Publish to TestPyPI
-        if: contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha')
+        if: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
 
       # 7️⃣ Conditional publish: PyPI for main releases
       - name: Publish to PyPI
-        if: !contains(github.ref_name, 'beta') && !contains(github.ref_name, 'alpha')
+        if: ${{ !contains(github.ref_name, 'beta') && !contains(github.ref_name, 'alpha') }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
@@ -78,5 +78,5 @@ jobs:
             - Artifacts are attached below
           files: dist/*
         env:
-          # Use PAT if default GITHUB_TOKEN fails
+          # Use PAT if default token fails
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
