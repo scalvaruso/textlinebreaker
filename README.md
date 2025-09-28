@@ -1,6 +1,6 @@
 # Textlinebreaker
 
-[<img src="https://img.shields.io/badge/textlinebreaker-py-blue?style=flat&logo=python&logoWidth=20.svg/"></a>](https://github.com/scalvaruso/textlinebreaker/)
+[![Static Badge](https://img.shields.io/badge/textlinebreaker-py-blue%3Fstyle%3Dflat%26logo%3Dpython%26logoWidth%3D20.svg?logo=python&color=blue)](https://github.com/scalvaruso/textlinebreaker/)
 [![PyPI - Version](https://img.shields.io/pypi/v/textlinebreaker?logo=pypi&logoColor=white&color=blue)](https://pypi.org/project/textlinebreaker/)
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/textlinebreaker?logo=python)](https://pypi.org/project/textlinebreaker/)
 [![Downloads](https://static.pepy.tech/badge/textlinebreaker)](https://pepy.tech/project/textlinebreaker)
@@ -13,93 +13,178 @@
 
 ## Description
 
-Text Line Breaker is a Python script that takes a string of text and breaks it into lines of a specified maximum width. This tool is particularly useful for formatting and displaying text in a terminal.
+Text Line Breaker is a Python utility class that splits text into multiple lines of a specified maximum width.  
+It supports alignment options and dynamic width calculation, making it useful for formatting and displaying text in terminal applications.
 
 ## Features
 
-- Split text lines to fit within a specified maximum width.
-- Choose alignment options for the text (left, center, right).
-- Adjust the maximum width (default value is the terminal width).
+- Break text into multiple lines with a configurable maximum width.  
+- Alignment options: **left, center, right**.  
+- Dynamic width selection (`"min"`, `"2words"`, `"max"`, or integer values).  
+- Supports input as **string** or **list of strings**.  
+- Class-based design with built-in string conversion, iteration, and border formatting.  
 
-## Latest Version 0.2.0
+## Latest Version 1.0.0
 
-- Added new parameters (`"min"`, `"2words"`, `"max"`) to set different lines width.
-- Improved algorithm to better split the input in the desired lenght lines.
+- **New class-based API**: `TextLineBreaker` replaces the old `split_line` function.  
+- Added methods:
+  - `__str__()` → return formatted text as string  
+  - `__iter__()` → iterate through formatted lines  
+  - `.delimiter(char="|")` → wrap lines with border characters  
+- Improved input handling (lists, tabs, fallback terminal width).  
+- Alignment normalized: `"centre"` maps to `"center"`.  
+- Safer and more flexible width validation.  
+
+⚠️ **Breaking change**:  
+The old function `split_line()` is no longer the main entry point.  
+Use the `TextLineBreaker` class instead.  
 
 ## Table of Contents
 
-- [Getting Started](#getting-started)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-- [Usage](#usage)
-  - [Parameters](#parameters)
-  - [Examples](#examples)
-- [Contributing](#contributing)
-- [License](#license)
+- [Getting Started](#getting-started)  
+  - [Prerequisites](#prerequisites)  
+  - [Installation](#installation)  
+- [Usage](#usage)  
+  - [Parameters](#parameters)  
+  - [Examples](#examples)  
+- [Migration from 0.2.0](#migration-from-020)  
+- [Contributing](#contributing)  
+- [License](#license)  
 
 ## Getting Started
 
 ### Prerequisites
 
-This script relies on the Python standard library and does not require any additional dependencies.
+This package relies only on the Python standard library and does not require additional dependencies.
 
 ### Installation
 
-- Install the package with pip
+- Install the package with pip:
 
 ```bash
-  pip install textlinebreaker
-```
-- or upgrade it with
+pip install textlinebreaker
+````
+
+- Or upgrade it:
+
 ```bash
-  pip install --upgrade textlinebreaker
+pip install --upgrade textlinebreaker
 ```
 
-- Import the package in your program
+- Import the class in your program:
 
 ```python
-  from textlinebreaker import split_line
+from textlinebreaker import TextLineBreaker
 ```
 
 ## Usage
 
-This function takes a long string of text as input and breaks it into lines according to the specified maximum width.
-The default length is the width of the terminal.
+The `TextLineBreaker` class takes a string or list of strings and breaks it into lines according to the specified maximum width and alignment.
+The default width is the terminal width.
 
 ### Parameters
 
-The `split_line` function accepts the following parameters:
+The `TextLineBreaker` class accepts the following parameters:
 
-- **`line`**: is the main argument, it's the text that needs to be broken down.
-  - allowed values: strings, list of strings
-- **`max_width`**: allows to set the max length of text on a line. 
-  - allowed values: integers, "min", "2words", "max"
-  - default value = "max" (terminal width)
-- **`alignment`**: allows to change the alignment of the text inside the frame.
-  - allowed values: "left", "centre", "center", "right"
-  - default value = "left"
+- **`text`**: the input text.
+
+  - allowed values: `str`, `list[str]`
+- **`max_width`**: maximum width for each line.
+
+  - allowed values: integer (≥ 9, ≤ terminal width), `"min"`, `"2words"`, `"max"`
+  - default: terminal width
+- **`alignment`**: text alignment inside the line.
+
+  - allowed values: `"left"`, `"right"`, `"center"`, `"centre"`
+  - default: `"left"`
 
 ### Examples
 
-Here's an example of how to use the `split_line` function:
+```python
+from textlinebreaker import TextLineBreaker
+
+text = "Text Line Breaker is a Python class that can split your text into multiple lines and align them neatly."
+
+# Example 1: Left alignment, fixed width
+breaker1 = TextLineBreaker(text, max_width=30)
+print(breaker1)
+
+# Example 2: Center alignment with borders
+breaker2 = TextLineBreaker(text, max_width=30, alignment="center")
+print(breaker2.delimiter(char="|"))
+
+# Example 3: Right alignment, width="2words"
+breaker3 = TextLineBreaker(text, max_width="2words", alignment="right")
+for line in breaker3:
+    print(line)
+```
+
+Example output:
+
+```bash
+=== Left aligned ===
+Text Line Breaker is a Python 
+class that can split your text
+into multiple lines and align 
+them neatly.
+
+=== Center aligned with borders ===
+|   Text Line Breaker is a   |
+|Python class that can split |
+|  your text into multiple   |
+|lines and align them neatly.|
+
+=== Right aligned ===
+Text Line
+  Breaker
+     is a
+   Python
+    class
+ that can
+    split
+your text
+     into
+ multiple
+lines and
+    align
+     them
+  neatly.
+```
+
+## Migration from 0.2.0
+
+In **v0.2.0**, you used a function:
 
 ```python
 from textlinebreaker import split_line
 
-text = "This is an example of text line breaking using the Text Line Breaker script."
-lines = split_line(text, max_width=30, alignment="center")
+text = "Hello world"
+lines = split_line(text, max_width=20, alignment="center")
 
 for line in lines:
-  print(line)
+    print(line)
 ```
 
-Output:
+In **v1.0.0**, use the class instead:
 
-```bash
- This is an example of text 
-line breaking using the Text 
-    Line Breaker script.     
+```python
+from textlinebreaker import TextLineBreaker
+
+text = "Hello world"
+breaker = TextLineBreaker(text, max_width=20, alignment="center")
+
+for line in breaker:
+    print(line)
 ```
+
+Key differences:
+
+- `split_line()` → replaced by `TextLineBreaker` class.
+- Iterating works directly on the class (`for line in breaker`).
+- `print(breaker)` prints the whole formatted block.
+- `.delimiter("|")` adds borders around the text.
+
+---
 
 ## Contributing
 
