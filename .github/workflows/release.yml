@@ -8,7 +8,8 @@ on:
 
 # Ensure token has permissions to create releases
 permissions:
-  contents: write  # Required for GitHub release creation
+  contents: write       # needed to push assets / create release
+  packages: write       # optional, for package publishing
 
 jobs:
   build-and-publish:

@@ -7,6 +7,10 @@ on:
         description: "Release tag to publish (e.g., v1.0.0)"
         required: true
 
+permissions:
+  contents: write       # needed to push assets / create release
+  packages: write       # optional, for package publishing
+
 jobs:
   publish-pypi:
     runs-on: ubuntu-latest
