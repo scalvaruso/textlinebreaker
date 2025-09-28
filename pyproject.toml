@@ -44,4 +44,4 @@ Issues = "https://github.com/scalvaruso/textlinebreaker/issues"
 [tool.setuptools_scm]
 # How version numbers are generated
 version_scheme = "post-release"
-local_scheme = "node-and-date"
+local_scheme = "no-local-version"
