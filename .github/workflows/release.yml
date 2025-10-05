@@ -2,66 +2,138 @@ name: Release Package
 
 on:
   push:
+    branches:
+      - dev
+      - main
     tags:
-      - "v*"   # matches v1.0.0, v1.0.1-beta, etc.
+      - "v*"
 
 permissions:
-  contents: write       # needed to push assets / create release
-  packages: write       # for publishing packages
+  contents: write
+  packages: write
 
 jobs:
-  build-and-publish:
+  # ---------------------------
+  # 1. Build package
+  # ---------------------------
+  build:
     runs-on: ubuntu-latest
-
+    if: startsWith(github.ref, 'refs/tags/')  # Only build for tags
     steps:
-      # 1. Checkout the code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2. Set up Python
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.x"
 
-      # 3. Install build tools
       - name: Install build tools
         run: |
           python -m pip install --upgrade pip
-          pip install build twine
+          pip install build setuptools wheel twine setuptools-scm
 
-      # 4. Build the package
+      - name: Clean previous builds
+        run: rm -rf dist/ build/ *.egg-info
+
       - name: Build package
-        run: python -m build
+        run: python -m build --sdist --wheel
 
-      # 5. Conditional publish: TestPyPI for pre-releases
-      - name: Publish to TestPyPI
-        if: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
-        uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
         with:
-          password: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          repository-url: https://test.pypi.org/legacy/
+          name: dist-files
+          path: dist/
 
-      # 6. Conditional publish: PyPI for main releases
-      - name: Publish to PyPI
-        if: ${{ !(contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha')) }}
-        uses: pypa/gh-action-pypi-publish@release/v1
+  # ---------------------------
+  # 2. Publish to TestPyPI for tags on dev OR dev tags on main
+  # ---------------------------
+  publish-testpypi:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/') && (startsWith(github.ref, 'refs/tags/') && github.ref_name && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name) && (github.ref_name != '' && github.ref_name)
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
         with:
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          name: dist-files
+          path: dist/
 
-      # 7. Create GitHub Release
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install twine
+        run: python -m pip install --upgrade pip twine
+
+      - name: Upload to TestPyPI
+        run: python -m twine upload --repository-url https://test.pypi.org/legacy/ dist/*
+        env:
+          TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          TWINE_USERNAME: __token__
+
+  # ---------------------------
+  # 3. Publish to PyPI (stable tags on main)
+  # ---------------------------
+  publish-pypi:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref_name, 'dev') && startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Install twine
+        run: python -m pip install --upgrade pip twine
+
+      - name: Upload to PyPI
+        run: python -m twine upload dist/*
+        env:
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+          TWINE_USERNAME: __token__
+
+  # ---------------------------
+  # 4. Create GitHub Release (stable tags on main)
+  # ---------------------------
+  create-gh-release:
+    needs: [build, publish-pypi]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v') && !contains(github.ref_name, 'dev')
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-files
+          path: dist/
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
-          prerelease: ${{ contains(github.ref_name, 'beta') || contains(github.ref_name, 'alpha') }}
-          allow_updates: true
           body: |
             🚀 Release ${{ github.ref_name }}
 
-            - Published automatically to TestPyPI/PyPI
-            - Artifacts are attached below
+            - Published to PyPI automatically.
+            - See attached build artifacts below.
           files: dist/*
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }} # PAT if default token fails
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
